@@ -1,6 +1,7 @@
 /**
- * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.1
+ * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.2
  * Dual-mode controller: Visual Breed/Trait Picker & Advanced Punnett Matrix.
+ * User-friendly common phenotype display.
  */
 
 import { CHICKEN_GENETICS_DATABASE, POPULAR_POULTRY_BREEDS, PRESET_BREEDING_CROSSES } from './geneticsData.js';
@@ -108,7 +109,6 @@ function applyBreedToParent(parent, breed) {
   const breedGenotype = JSON.parse(JSON.stringify(breed.genotype));
   const breedLoci = Object.keys(breedGenotype);
 
-  // Update selected loci list to include breed loci (up to 4 max)
   breedLoci.forEach(locusId => {
     if (!currentSelectedLoci.includes(locusId)) {
       if (currentSelectedLoci.length < 4) {
@@ -122,7 +122,6 @@ function applyBreedToParent(parent, breed) {
     const nameEl = document.getElementById('sire-breed-name');
     if (nameEl) nameEl.textContent = `${breed.icon} ${breed.name} (${breed.category})`;
   } else {
-    // For females (ZW), convert any sex-linked 2nd allele to 'W'
     Object.keys(breedGenotype).forEach(id => {
       const locus = getLocusById(id);
       if (locus && locus.isSexLinked) {
@@ -134,7 +133,6 @@ function applyBreedToParent(parent, breed) {
     if (nameEl) nameEl.textContent = `${breed.icon} ${breed.name} (${breed.category})`;
   }
 
-  // Ensure all active loci are normalized in both parent genotype states
   currentSelectedLoci.forEach(locusId => {
     const locus = getLocusById(locusId);
     if (!locus) return;
@@ -173,8 +171,8 @@ function renderLocusSelector() {
     item.innerHTML = `
       <input type="checkbox" value="${locus.locusId}" ${isChecked ? 'checked' : ''}>
       <div class="locus-info">
-        <span class="locus-symbol">${locus.locusId} ${locus.isSexLinked ? '(Z-Chromosome)' : ''}</span>
-        <span class="locus-name">${locus.locusName}</span>
+        <span class="locus-symbol">${locus.locusName}</span>
+        <span class="locus-name">Symbol: ${locus.locusId} ${locus.isSexLinked ? '(Z-Chromosome)' : ''}</span>
       </div>
     `;
 
@@ -225,7 +223,7 @@ function renderParentSelectors() {
     const sireRow = document.createElement('div');
     sireRow.className = 'locus-pair-row';
     sireRow.innerHTML = `
-      <span class="locus-pair-label">${locus.locusId} (${locus.locusName}):</span>
+      <span class="locus-pair-label">${locus.locusName}:</span>
       <div style="display: flex; gap: 0.3rem;">
         ${createAlleleSelectHtml(locus, sireGenotypeState[locusId][0], `sire-${locusId}-0`, false)}
         ${createAlleleSelectHtml(locus, sireGenotypeState[locusId][1], `sire-${locusId}-1`, false)}
@@ -237,7 +235,7 @@ function renderParentSelectors() {
     const damRow = document.createElement('div');
     damRow.className = 'locus-pair-row';
     damRow.innerHTML = `
-      <span class="locus-pair-label">${locus.locusId} (${locus.locusName}):</span>
+      <span class="locus-pair-label">${locus.locusName}:</span>
       <div style="display: flex; gap: 0.3rem;">
         ${createAlleleSelectHtml(locus, damGenotypeState[locusId][0], `dam-${locusId}-0`, false)}
         ${createAlleleSelectHtml(locus, damGenotypeState[locusId][1], `dam-${locusId}-1`, locus.isSexLinked)}
@@ -269,7 +267,7 @@ function createAlleleSelectHtml(locus, selectedVal, id, isDamSexChromosome) {
   } else {
     locus.alleles.forEach(a => {
       const isSel = a.symbol === selectedVal ? 'selected' : '';
-      optionsHtml += `<option value="${a.symbol}" ${isSel}>${a.symbol} (${a.name})</option>`;
+      optionsHtml += `<option value="${a.symbol}" ${isSel}>${a.name} (${a.symbol})</option>`;
     });
   }
   return `<select class="allele-select" id="${id}">${optionsHtml}</select>`;
@@ -300,7 +298,7 @@ function renderVisualSimpleOutcomes(result) {
 
   container.innerHTML = result.outcomes.map(item => {
     const isFemale = item.sex === 'F';
-    const sexLabel = isFemale ? '♀️ Hen (Female ZW)' : '♂️ Rooster (Male ZZ)';
+    const sexLabel = isFemale ? '♀️ Hen (Female)' : '♂️ Rooster (Male)';
     const sexClass = isFemale ? 'female' : 'male';
 
     const eggInfo = predictEggColor(item.loci);
@@ -311,13 +309,12 @@ function renderVisualSimpleOutcomes(result) {
         const isLethal = locusId === 'Et' && data.geno === 'Et/Et';
         const tagClass = isLethal ? 'tag warn' : (locus?.isSexLinked ? 'tag sex' : 'tag');
         const icon = isLethal ? '⚠️' : '🧬';
-        return `<span class="${tagClass}" title="${data.geno}">${icon} ${locusId}: ${data.pheno} (${data.geno})</span>`;
+        return `<span class="${tagClass}" title="Genotype: ${data.geno} (${locus?.locusName})">${icon} ${data.pheno}</span>`;
       }).join('');
 
-    // Summary phenotype title
     const mainPhenos = Object.entries(item.loci)
       .map(([id, d]) => d.pheno)
-      .join(', ');
+      .join(' • ');
 
     return `
       <div class="outcome-card ${sexClass}">
@@ -349,7 +346,7 @@ function renderPunnettGrid(punnettData) {
       const sexClass = cell.sex === 'F' ? 'f' : 'm';
       const sexLabel = cell.sex === 'F' ? '♀ Hen' : '♂ Rooster';
       const genos = cell.pairs.map(p => p.geno).join(' ; ');
-      const phenos = cell.pairs.map(p => `${p.locusId}: ${p.pheno}`).join('<br>');
+      const phenos = cell.pairs.map(p => `${p.pheno}`).join('<br>');
 
       tableHtml += `
         <td>
@@ -374,12 +371,15 @@ function renderSummaryRatios(result) {
     const genos = Object.entries(item.loci)
       .map(([k, v]) => `${k}:${v.geno}`)
       .join(' | ');
+    const phenosSummary = Object.entries(item.loci)
+      .map(([k, v]) => v.pheno)
+      .join(', ');
     const sexTag = item.sex === 'F' ? '♀ Hen' : '♂ Rooster';
 
     return `
       <div class="ratio-item">
         <div class="ratio-row">
-          <span>${sexTag} — ${genos}</span>
+          <span>${sexTag} — ${phenosSummary} <small style="opacity:0.75;">(${genos})</small></span>
           <span>${item.pct}% (${item.count}/${result.totalCombinations})</span>
         </div>
         <div class="ratio-bar">
@@ -397,7 +397,6 @@ function renderMutationsDatabase() {
   const filtersContainer = document.getElementById('category-filters');
   if (!container) return;
 
-  // Build category filter pills
   const categories = ['ALL', ...new Set(CHICKEN_GENETICS_DATABASE.map(m => m.category))];
   if (filtersContainer) {
     filtersContainer.innerHTML = categories.map(cat => `
@@ -444,8 +443,8 @@ function renderMutationsDatabase() {
 
       const allelesHtml = m.alleles.map(a => `
         <div class="allele-row">
-          <span class="allele-sym">${a.symbol}</span>
-          <span class="allele-txt"><strong class="allele-name">${a.name}:</strong> ${a.description}</span>
+          <span class="allele-sym">${a.name} (${a.symbol})</span>
+          <span class="allele-txt">${a.description}</span>
         </div>
       `).join('');
 
@@ -505,7 +504,6 @@ function renderPresetCrosses() {
       sireGenotypeState = JSON.parse(JSON.stringify(preset.sireGenotype));
       damGenotypeState = JSON.parse(JSON.stringify(preset.damGenotype));
 
-      // Ensure dam sex-linked loci have 'W'
       Object.keys(damGenotypeState).forEach(id => {
         const locus = getLocusById(id);
         if (locus && locus.isSexLinked && damGenotypeState[id].length > 1) {
@@ -513,13 +511,11 @@ function renderPresetCrosses() {
         }
       });
 
-      // Reset breed name indicators for custom preset cross
       const sireNameEl = document.getElementById('sire-breed-name');
       const damNameEl = document.getElementById('dam-breed-name');
       if (sireNameEl) sireNameEl.textContent = `Sire: ${preset.name.split('×')[0] || preset.name}`;
       if (damNameEl) damNameEl.textContent = `Dam: ${preset.name.split('×')[1] || preset.name}`;
 
-      // Switch to studio tab
       document.querySelector('[data-tab="studio"]')?.click();
       renderLocusSelector();
       renderParentSelectors();
@@ -538,13 +534,13 @@ function openModal(gene) {
 
   let swatchHtml = '';
   if (gene.locusId === 'Bl') {
-    swatchHtml = `<div class="pheno-swatch" style="background: linear-gradient(90deg, #1A202C 33%, #4A5568 33% 66%, #C8D6E5 66%); color:#fff; text-shadow:0 1px 3px #000;">Black (bl+/bl+) | Slate Blue (Bl/bl+) | Splash (Bl/Bl)</div>`;
+    swatchHtml = `<div class="pheno-swatch" style="background: linear-gradient(90deg, #1A202C 33%, #4A5568 33% 66%, #C8D6E5 66%); color:#fff; text-shadow:0 1px 3px #000;">Black | Slate Blue | Splash</div>`;
   } else if (gene.locusId === 'Fm') {
-    swatchHtml = `<div class="pheno-swatch" style="background: #111116; color:var(--c-gold); border-color:var(--c-gold);">Ayam Cemani / Fibromelanosis (Hyper-pigmented Black Skin & Organs)</div>`;
+    swatchHtml = `<div class="pheno-swatch" style="background: #111116; color:var(--c-gold); border-color:var(--c-gold);">Black Skin & Internal Organs (Fibromelanosis)</div>`;
   } else if (gene.locusId === 'O') {
-    swatchHtml = `<div class="pheno-swatch" style="background: #A0C8E0; color:#1A365D;">Sky Blue / Turquoise Egg Shell (SLCO1B3 Biliverdin Pigment)</div>`;
+    swatchHtml = `<div class="pheno-swatch" style="background: #A0C8E0; color:#1A365D;">Sky Blue / Green Egg Shell</div>`;
   } else {
-    swatchHtml = `<div class="pheno-swatch" style="background: var(--c-surface-2); color:var(--c-gold);">${gene.locusName} (${gene.locusId})</div>`;
+    swatchHtml = `<div class="pheno-swatch" style="background: var(--c-surface-2); color:var(--c-gold);">${gene.locusName}</div>`;
   }
 
   modalContent.innerHTML = `
@@ -553,11 +549,11 @@ function openModal(gene) {
     <div style="font-size:0.85rem; color:var(--c-amber); margin-bottom:1rem; font-weight:600;">${gene.chromosome} • ${gene.inheritanceMode} • ${gene.category}</div>
     <p style="font-size:0.95rem; color:var(--c-parch); line-height:1.6; margin-bottom:1.25rem;">${gene.description}</p>
 
-    <h4 style="font-family:var(--font-h); color:var(--c-parch); margin-bottom:0.5rem;">Allele Series</h4>
+    <h4 style="font-family:var(--font-h); color:var(--c-parch); margin-bottom:0.5rem;">Alleles &amp; Effects</h4>
     <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.25rem;">
       ${gene.alleles.map(a => `
         <div style="background:rgba(13,17,23,0.6); padding:0.6rem 0.8rem; border-radius:var(--r-md); border:1px solid var(--c-border);">
-          <span style="color:var(--c-gold); font-weight:700; font-size:0.9rem;">${a.symbol} (${a.name}):</span>
+          <span style="color:var(--c-gold); font-weight:700; font-size:0.9rem;">${a.name} (${a.symbol}):</span>
           <span style="color:var(--c-muted); font-size:0.85rem;"> ${a.description}</span>
         </div>
       `).join('')}

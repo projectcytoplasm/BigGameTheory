@@ -1,11 +1,11 @@
 /**
- * Big Game Theory — Punnett Square Calculation Engine v2.1
+ * Big Game Theory — Punnett Square Calculation Engine v2.2
  * Correct Mendelian, Incomplete Dominant, and ZW/ZZ Sex-Linked poultry genetics.
+ * Common user-friendly phenotype naming.
  */
 
 import { CHICKEN_GENETICS_DATABASE } from './geneticsData.js';
 
-// ─── Helper: Cartesian product ─────────────────────────────────────────
 function cartesianProduct(arrays) {
   return arrays.reduce(
     (acc, arr) => acc.flatMap(prev => arr.map(item => [...prev, item])),
@@ -13,12 +13,10 @@ function cartesianProduct(arrays) {
   );
 }
 
-// ─── Get locus object by ID ────────────────────────────────────────────
 export function getLocusById(id) {
   return CHICKEN_GENETICS_DATABASE.find(l => l.locusId === id);
 }
 
-// ─── Fill missing locus alleles with wild-type defaults ───────────────
 export function normalizeGenotype(locusId, genotypeArray) {
   const locus = getLocusById(locusId);
   if (!genotypeArray || !Array.isArray(genotypeArray) || genotypeArray.length < 2) {
@@ -28,99 +26,143 @@ export function normalizeGenotype(locusId, genotypeArray) {
   return genotypeArray;
 }
 
-// ─── Get gametes for a parent ──────────────────────────────────────────
 export function getGametes(locusId, genotypeArray, isFemale) {
   const locus = getLocusById(locusId);
   const [a1, a2] = normalizeGenotype(locusId, genotypeArray);
 
   if (locus && locus.isSexLinked && isFemale) {
-    // Dam has 1 Z-allele and 1 W-chromosome
     return [a1, 'W'];
   }
   return [a1, a2];
 }
 
-// ─── Determine phenotype text for single locus ─────────────────────────
+// ─── User-Friendly Common Phenotype Names ──────────────────────────────
 export function getLocusPhenotype(locusData, allele1, allele2, sex) {
-  const { locusId, alleles, inheritanceMode, phenotypeMap, isSexLinked } = locusData;
+  const { locusId, locusName, alleles, inheritanceMode, phenotypeMap, isSexLinked } = locusData;
 
   const a1 = allele1 === 'W' ? null : allele1;
   const a2 = allele2 === 'W' ? null : allele2;
 
-  // Female hemizygous (Z/W)
-  if (isSexLinked && sex === 'F' && (allele1 === 'W' || allele2 === 'W')) {
-    const activeSymbol = a1 || a2;
-    const alObj = alleles.find(a => a.symbol === activeSymbol);
-    return alObj ? `${alObj.name} (1x Z)` : activeSymbol;
+  // Custom friendly mapping per locus
+  if (locusId === 'Fm') {
+    if (a1 === 'Fm' && a2 === 'Fm') return 'Pure Fibromelanic (Deep Black Skin & Organs)';
+    if (a1 === 'Fm' || a2 === 'Fm') return 'Black Skin & Wattles (Fibromelanosis Carrier)';
+    return 'Normal Pink Skin & Organs';
   }
 
-  // Override phenotype maps (e.g. Blue locus: Bl/Bl=Splash, Bl/bl+=Blue, bl+/bl+=Black)
+  if (locusId === 'Bl') {
+    if (a1 === 'Bl' && a2 === 'Bl') return 'Splash Plumage (White with Blue Specks)';
+    if (a1 === 'Bl' || a2 === 'Bl') return 'Slate Blue Plumage';
+    return 'Solid Black Plumage';
+  }
+
+  if (locusId === 'B') {
+    if (sex === 'F') {
+      return (a1 === 'B' || a2 === 'B') ? 'Single-Barred Feathers (Dark Cuckoo)' : 'Non-Barred Solid';
+    }
+    if (a1 === 'B' && a2 === 'B') return 'Double-Barred Feathers (Light Zebra Barring)';
+    if (a1 === 'B' || a2 === 'B') return 'Single-Barred Feathers (Dark Barring)';
+    return 'Non-Barred Solid';
+  }
+
+  if (locusId === 'O') {
+    if (a1 === 'O' || a2 === 'O') return 'Blue / Green Egg Shell (Oocyan)';
+    return 'White / Brown Shell';
+  }
+
+  if (locusId === 'Pti') {
+    if (a1 === 'Pti' && a2 === 'Pti') return 'Heavily Feathered Legs & Toes';
+    if (a1 === 'Pti' || a2 === 'Pti') return 'Feathered Legs & Shanks';
+    return 'Clean Clean Shanks';
+  }
+
+  if (locusId === 'P') {
+    if (a1 === 'P' || a2 === 'P') return 'Pea Comb (Frostbite Resistant)';
+    return 'Single Serrated Comb';
+  }
+
+  if (locusId === 'R') {
+    if (a1 === 'R' || a2 === 'R') return 'Rose Comb (Flat Papillae)';
+    return 'Single Blade Comb';
+  }
+
+  if (locusId === 'Cr') {
+    if (a1 === 'Cr' || a2 === 'Cr') return 'Crested Feather Topknot';
+    return 'Smooth Head (No Crest)';
+  }
+
+  if (locusId === 'Mb') {
+    if (a1 === 'Mb' || a2 === 'Mb') return 'Muffs & Chin Beard';
+    return 'Clean Face';
+  }
+
+  if (locusId === 'F') {
+    if (a1 === 'F' && a2 === 'F') return '⚠️ Extreme Frizzle (Brittle Feathers)';
+    if (a1 === 'F' || a2 === 'F') return 'Frizzled Curled Feathers';
+    return 'Normal Smooth Feathers';
+  }
+
+  if (locusId === 'h') {
+    if (a1 === 'h' && a2 === 'h') return 'Silkie Fluffy Hair Feathers';
+    return 'Normal Smooth Feathers';
+  }
+
+  if (locusId === 'Na') {
+    if (a1 === 'Na' && a2 === 'Na') return 'Fully Bare Neck (Naked Neck)';
+    if (a1 === 'Na' || a2 === 'Na') return 'Naked Neck (Partial Bowtie)';
+    return 'Fully Feathered Neck';
+  }
+
+  if (locusId === 'S') {
+    if (sex === 'F') {
+      return (a1 === 'S' || a2 === 'S') ? 'Silver Plumage Background' : 'Gold / Red Background';
+    }
+    if (a1 === 'S' || a2 === 'S') return 'Silver Plumage Background';
+    return 'Gold / Red Background';
+  }
+
+  // Fallback map override
   if (phenotypeMap) {
-    const key1 = `${a1}/${a2}`;
-    const key2 = `${a2}/${a1}`;
-    if (phenotypeMap[key1]) return phenotypeMap[key1].name;
-    if (phenotypeMap[key2]) return phenotypeMap[key2].name;
+    const k1 = `${a1}/${a2}`, k2 = `${a2}/${a1}`;
+    if (phenotypeMap[k1]) return phenotypeMap[k1].name;
+    if (phenotypeMap[k2]) return phenotypeMap[k2].name;
   }
 
+  // General fallback
   const getAlleleObj = sym => alleles.find(a => a.symbol === sym);
-  const al1 = getAlleleObj(a1);
-  const al2 = getAlleleObj(a2);
+  const al1 = getAlleleObj(a1), al2 = getAlleleObj(a2);
 
-  if (!al1 || !al2) return `${a1}/${a2}`;
-
-  if (a1 === a2) {
-    return al1.name;
-  }
-
-  if (inheritanceMode.includes('Incomplete')) {
-    const dominant = al1.dominanceRank <= al2.dominanceRank ? al1 : al2;
-    const recessive = al1.dominanceRank <= al2.dominanceRank ? al2 : al1;
-    return `Heterozygous ${dominant.name} / ${recessive.name}`;
-  }
+  if (!al1 || !al2) return locusName;
+  if (a1 === a2) return al1.name;
 
   const dominant = al1.dominanceRank <= al2.dominanceRank ? al1 : al2;
   return dominant.name;
 }
 
-// ─── Main Punnett Cross Calculator ─────────────────────────────────────
+// ─── Main Cross Calculator ─────────────────────────────────────────────
 export function calculateCross(selectedLoci, sireGenotype, damGenotype) {
   if (!selectedLoci || !selectedLoci.length) {
     return { outcomes: [], totalCombinations: 0 };
   }
 
-  // Ensure loci count is within performance bounds (max 4)
   const activeLoci = selectedLoci.slice(0, 4);
 
-  // Generate gametes per locus
-  const sireGameteSets = activeLoci.map(locusId =>
-    getGametes(locusId, sireGenotype[locusId], false)
-  );
-
-  const damGameteSets = activeLoci.map(locusId =>
-    getGametes(locusId, damGenotype[locusId], true)
-  );
+  const sireGameteSets = activeLoci.map(id => getGametes(id, sireGenotype[id], false));
+  const damGameteSets  = activeLoci.map(id => getGametes(id, damGenotype[id], true));
 
   const sireCombos = cartesianProduct(sireGameteSets);
   const damCombos  = cartesianProduct(damGameteSets);
 
   const rawCombinations = [];
-
   const hasSexLinkedLocus = activeLoci.some(id => getLocusById(id)?.isSexLinked);
 
   for (const sc of sireCombos) {
     for (const dc of damCombos) {
-      
-      // Determine sex from W chromosome presence
       let isFemaleFromW = false;
       for (let i = 0; i < activeLoci.length; i++) {
-        if (dc[i] === 'W') {
-          isFemaleFromW = true;
-          break;
-        }
+        if (dc[i] === 'W') { isFemaleFromW = true; break; }
       }
 
-      // If sex-linked locus present, sex is defined by W
-      // If only autosomal loci present, generate BOTH male and female options for 50/50 split
       const sexesToEvaluate = hasSexLinkedLocus
         ? [isFemaleFromW ? 'F' : 'M']
         : ['F', 'M'];
@@ -131,10 +173,8 @@ export function calculateCross(selectedLoci, sireGenotype, damGenotype) {
         for (let i = 0; i < activeLoci.length; i++) {
           const locusId = activeLoci[i];
           const locus = getLocusById(locusId);
-          let a1 = sc[i];
-          let a2 = dc[i];
+          let a1 = sc[i], a2 = dc[i];
 
-          // If autosomal or male sex-linked, order alleles by dominance
           if (a1 !== 'W' && a2 !== 'W') {
             const rank = sym => {
               const obj = locus.alleles.find(a => a.symbol === sym);
@@ -154,7 +194,6 @@ export function calculateCross(selectedLoci, sireGenotype, damGenotype) {
     }
   }
 
-  // Aggregate by phenotype signature
   const outcomeMap = {};
 
   for (const combo of rawCombinations) {
@@ -184,7 +223,7 @@ export function calculateCross(selectedLoci, sireGenotype, damGenotype) {
   return { outcomes, totalCombinations: total, activeLoci };
 }
 
-// ─── Build Punnett Grid ────────────────────────────────────────────────
+// ─── Build Punnett Grid Data ───────────────────────────────────────────
 export function buildPunnettTable(selectedLoci, sireGenotype, damGenotype) {
   const activeLoci = selectedLoci.slice(0, 4);
 
