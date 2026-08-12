@@ -1,7 +1,6 @@
 /**
- * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.2
- * Dual-mode controller: Visual Breed/Trait Picker & Advanced Punnett Matrix.
- * User-friendly common phenotype display.
+ * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.3
+ * Reactive automatic calculations, proper checkbox toggle states, and visual feedback.
  */
 
 import { CHICKEN_GENETICS_DATABASE, POPULAR_POULTRY_BREEDS, PRESET_BREEDING_CROSSES } from './geneticsData.js';
@@ -23,7 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPresetCrosses();
   runCalculator();
 
-  document.getElementById('run-calc-btn')?.addEventListener('click', runCalculator);
+  document.getElementById('run-calc-btn')?.addEventListener('click', () => {
+    runCalculator();
+    flashResultsPanel();
+  });
+
   document.getElementById('modal-close')?.addEventListener('click', closeModal);
   document.getElementById('gene-modal')?.addEventListener('click', (e) => {
     if (e.target.id === 'gene-modal') closeModal();
@@ -47,7 +50,7 @@ function initTabs() {
   });
 }
 
-/* ─── MODE SWITCHER (VISUAL MODE VS ADVANCED MODE) ────────────────────── */
+/* ─── MODE SWITCHER ────────────────────────────────────────────────────── */
 function initModeSwitcher() {
   const modeBtns = document.querySelectorAll('.mode-btn');
   const advancedSection = document.getElementById('advanced-matrix-section');
@@ -83,7 +86,6 @@ function renderBreedPickerGrid() {
   damBreedContainer.innerHTML = '';
 
   POPULAR_POULTRY_BREEDS.forEach(breed => {
-    // Sire Button
     const sireBtn = document.createElement('button');
     sireBtn.className = 'breed-btn';
     sireBtn.innerHTML = `<span class="breed-btn-icon">${breed.icon}</span> <span>${breed.name}</span>`;
@@ -93,7 +95,6 @@ function renderBreedPickerGrid() {
     });
     sireBreedContainer.appendChild(sireBtn);
 
-    // Dam Button
     const damBtn = document.createElement('button');
     damBtn.className = 'breed-btn';
     damBtn.innerHTML = `<span class="breed-btn-icon">${breed.icon}</span> <span>${breed.name}</span>`;
@@ -176,26 +177,33 @@ function renderLocusSelector() {
       </div>
     `;
 
-    item.querySelector('input')?.addEventListener('change', (e) => {
+    const input = item.querySelector('input');
+    input?.addEventListener('change', (e) => {
+      const locusId = locus.locusId;
+
       if (e.target.checked) {
         if (currentSelectedLoci.length >= 4) {
           alert('Maximum 4 simultaneous loci allowed for clear Punnett calculation.');
           e.target.checked = false;
           return;
         }
-        currentSelectedLoci.push(locus.locusId);
-        sireGenotypeState[locus.locusId] = [...locus.defaultSire];
-        damGenotypeState[locus.locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
+        if (!currentSelectedLoci.includes(locusId)) {
+          currentSelectedLoci.push(locusId);
+        }
+        sireGenotypeState[locusId] = [...locus.defaultSire];
+        damGenotypeState[locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
       } else {
         if (currentSelectedLoci.length <= 1) {
           alert('At least 1 locus must remain selected.');
           e.target.checked = true;
           return;
         }
-        currentSelectedLoci = currentSelectedLoci.filter(id => id !== locus.locusId);
-        delete sireGenotypeState[locus.locusId];
-        delete damGenotypeState[locus.locusId];
+        currentSelectedLoci = currentSelectedLoci.filter(id => id !== locusId);
+        delete sireGenotypeState[locusId];
+        delete damGenotypeState[locusId];
       }
+
+      renderLocusSelector();
       renderParentSelectors();
       runCalculator();
     });
@@ -281,6 +289,17 @@ function runCalculator() {
   const punnettData = buildPunnettTable(currentSelectedLoci, sireGenotypeState, damGenotypeState);
   renderPunnettGrid(punnettData);
   renderSummaryRatios(result);
+}
+
+function flashResultsPanel() {
+  const panel = document.querySelector('.results-panel');
+  if (!panel) return;
+  panel.style.borderColor = 'var(--c-gold)';
+  panel.style.boxShadow = '0 0 35px rgba(212, 175, 55, 0.35)';
+  setTimeout(() => {
+    panel.style.borderColor = '';
+    panel.style.boxShadow = '';
+  }, 400);
 }
 
 /* VISUAL SIMPLE OUTCOME CARDS */
