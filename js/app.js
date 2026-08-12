@@ -1,13 +1,13 @@
 /**
- * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.4
- * Bulletproof error handling: safe state initialization, crash-proof DOM event binding,
- * instant reactive calculations, and plain-English phenotype naming.
+ * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.5
+ * Event-delegated architecture: zero memory leaks, zero event listener cascades,
+ * crash-proof state management, instant calculations.
  */
 
 import { CHICKEN_GENETICS_DATABASE, POPULAR_POULTRY_BREEDS, PRESET_BREEDING_CROSSES } from './geneticsData.js';
 import { calculateCross, buildPunnettTable, predictEggColor, getLocusById } from './punnettEngine.js';
 
-let currentMode = 'simple'; // 'simple' (Visual mode) or 'advanced'
+let currentMode = 'simple'; // 'simple' or 'advanced'
 let currentSelectedLoci = ['O', 'Pti']; // Default Olive Egger loci
 let sireGenotypeState = { O: ['O', 'O'], Pti: ['pti^+', 'pti^+'] };
 let damGenotypeState = { O: ['o^+', 'o^+'], Pti: ['Pti', 'pti^+'] };
@@ -16,6 +16,7 @@ let activeCategoryFilter = 'ALL';
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initModeSwitcher();
+  initEventDelegation();
   renderBreedPickerGrid();
   renderLocusSelector();
   renderParentSelectors();
@@ -33,6 +34,73 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.id === 'gene-modal') closeModal();
   });
 });
+
+/* ─── GLOBAL EVENT DELEGATION (CRASH PREVENTION) ───────────────────────── */
+function initEventDelegation() {
+  // Locus checkbox delegation
+  const locusListContainer = document.getElementById('locus-selector-list');
+  locusListContainer?.addEventListener('change', (e) => {
+    if (e.target.type === 'checkbox') {
+      const locusId = e.target.value;
+      const locus = getLocusById(locusId);
+      if (!locus) return;
+
+      if (e.target.checked) {
+        if (currentSelectedLoci.length >= 4) {
+          alert('Maximum 4 simultaneous loci allowed for clear Punnett calculation.');
+          e.target.checked = false;
+          return;
+        }
+        if (!currentSelectedLoci.includes(locusId)) {
+          currentSelectedLoci.push(locusId);
+        }
+        sireGenotypeState[locusId] = [...locus.defaultSire];
+        damGenotypeState[locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
+      } else {
+        if (currentSelectedLoci.length <= 1) {
+          alert('At least 1 locus must remain selected.');
+          e.target.checked = true;
+          return;
+        }
+        currentSelectedLoci = currentSelectedLoci.filter(id => id !== locusId);
+        delete sireGenotypeState[locusId];
+        delete damGenotypeState[locusId];
+      }
+
+      ensureStateNormalized();
+      renderParentSelectors();
+      runCalculator();
+    }
+  });
+
+  // Sire Allele select delegation
+  const sireContainer = document.getElementById('sire-allele-container');
+  sireContainer?.addEventListener('change', (e) => {
+    if (e.target.classList.contains('allele-select')) {
+      const parts = e.target.id.split('-');
+      const locusId = parts[1];
+      const idx = parseInt(parts[2]);
+      if (locusId && !isNaN(idx) && sireGenotypeState[locusId]) {
+        sireGenotypeState[locusId][idx] = e.target.value;
+        runCalculator();
+      }
+    }
+  });
+
+  // Dam Allele select delegation
+  const damContainer = document.getElementById('dam-allele-container');
+  damContainer?.addEventListener('change', (e) => {
+    if (e.target.classList.contains('allele-select')) {
+      const parts = e.target.id.split('-');
+      const locusId = parts[1];
+      const idx = parseInt(parts[2]);
+      if (locusId && !isNaN(idx) && damGenotypeState[locusId]) {
+        damGenotypeState[locusId][idx] = e.target.value;
+        runCalculator();
+      }
+    }
+  });
+}
 
 /* ─── TAB ROUTER ──────────────────────────────────────────────────────── */
 function initTabs() {
@@ -110,15 +178,9 @@ function renderBreedPickerGrid() {
 function applyBreedToParent(parent, breed) {
   if (!breed || !breed.genotype) return;
   const breedGenotype = JSON.parse(JSON.stringify(breed.genotype));
-  const breedLoci = Object.keys(breedGenotype);
 
-  breedLoci.forEach(locusId => {
-    if (!currentSelectedLoci.includes(locusId)) {
-      if (currentSelectedLoci.length < 4) {
-        currentSelectedLoci.push(locusId);
-      }
-    }
-  });
+  // Set active loci to match the selected breed's loci
+  currentSelectedLoci = Object.keys(breedGenotype).slice(0, 4);
 
   if (parent === 'sire') {
     sireGenotypeState = breedGenotype;
@@ -183,41 +245,6 @@ function renderLocusSelector() {
       </div>
     `;
 
-    const input = item.querySelector('input');
-    input?.addEventListener('change', (e) => {
-      const locusId = locus.locusId;
-
-      if (e.target.checked) {
-        if (currentSelectedLoci.length >= 4) {
-          alert('Maximum 4 simultaneous loci allowed for clear Punnett calculation.');
-          e.target.checked = false;
-          return;
-        }
-        if (!currentSelectedLoci.includes(locusId)) {
-          currentSelectedLoci.push(locusId);
-        }
-        sireGenotypeState[locusId] = [...locus.defaultSire];
-        damGenotypeState[locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
-      } else {
-        if (currentSelectedLoci.length <= 1) {
-          alert('At least 1 locus must remain selected.');
-          e.target.checked = true;
-          return;
-        }
-        currentSelectedLoci = currentSelectedLoci.filter(id => id !== locusId);
-        delete sireGenotypeState[locusId];
-        delete damGenotypeState[locusId];
-      }
-
-      ensureStateNormalized();
-      renderParentSelectors();
-      runCalculator();
-
-      setTimeout(() => {
-        renderLocusSelector();
-      }, 0);
-    });
-
     container.appendChild(item);
   });
 }
@@ -262,21 +289,6 @@ function renderParentSelectors() {
       </div>
     `;
     damContainer.appendChild(damRow);
-  });
-
-  currentSelectedLoci.forEach(locusId => {
-    ['0', '1'].forEach(idx => {
-      document.getElementById(`sire-${locusId}-${idx}`)?.addEventListener('change', (e) => {
-        if (!sireGenotypeState[locusId]) sireGenotypeState[locusId] = [];
-        sireGenotypeState[locusId][parseInt(idx)] = e.target.value;
-        runCalculator();
-      });
-      document.getElementById(`dam-${locusId}-${idx}`)?.addEventListener('change', (e) => {
-        if (!damGenotypeState[locusId]) damGenotypeState[locusId] = [];
-        damGenotypeState[locusId][parseInt(idx)] = e.target.value;
-        runCalculator();
-      });
-    });
   });
 }
 
