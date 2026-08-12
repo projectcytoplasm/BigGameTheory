@@ -1,6 +1,7 @@
 /**
- * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.3
- * Reactive automatic calculations, proper checkbox toggle states, and visual feedback.
+ * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.4
+ * Bulletproof error handling: safe state initialization, crash-proof DOM event binding,
+ * instant reactive calculations, and plain-English phenotype naming.
  */
 
 import { CHICKEN_GENETICS_DATABASE, POPULAR_POULTRY_BREEDS, PRESET_BREEDING_CROSSES } from './geneticsData.js';
@@ -107,6 +108,7 @@ function renderBreedPickerGrid() {
 }
 
 function applyBreedToParent(parent, breed) {
+  if (!breed || !breed.genotype) return;
   const breedGenotype = JSON.parse(JSON.stringify(breed.genotype));
   const breedLoci = Object.keys(breedGenotype);
 
@@ -125,7 +127,7 @@ function applyBreedToParent(parent, breed) {
   } else {
     Object.keys(breedGenotype).forEach(id => {
       const locus = getLocusById(id);
-      if (locus && locus.isSexLinked) {
+      if (locus && locus.isSexLinked && Array.isArray(breedGenotype[id])) {
         breedGenotype[id][1] = 'W';
       }
     });
@@ -134,18 +136,7 @@ function applyBreedToParent(parent, breed) {
     if (nameEl) nameEl.textContent = `${breed.icon} ${breed.name} (${breed.category})`;
   }
 
-  currentSelectedLoci.forEach(locusId => {
-    const locus = getLocusById(locusId);
-    if (!locus) return;
-
-    if (!sireGenotypeState[locusId]) {
-      sireGenotypeState[locusId] = [...locus.defaultSire];
-    }
-    if (!damGenotypeState[locusId]) {
-      damGenotypeState[locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
-    }
-  });
-
+  ensureStateNormalized();
   renderLocusSelector();
   renderParentSelectors();
   runCalculator();
@@ -155,6 +146,21 @@ function highlightSelectedBreed(parent, activeBtn) {
   const container = document.getElementById(`${parent}-breed-picker`);
   container?.querySelectorAll('.breed-btn').forEach(b => b.classList.remove('selected'));
   activeBtn.classList.add('selected');
+}
+
+/* ─── NORMALIZE STATE SAFEGUARD ────────────────────────────────────────── */
+function ensureStateNormalized() {
+  currentSelectedLoci.forEach(locusId => {
+    const locus = getLocusById(locusId);
+    if (!locus) return;
+
+    if (!sireGenotypeState[locusId] || !Array.isArray(sireGenotypeState[locusId]) || sireGenotypeState[locusId].length < 2) {
+      sireGenotypeState[locusId] = [...locus.defaultSire];
+    }
+    if (!damGenotypeState[locusId] || !Array.isArray(damGenotypeState[locusId]) || damGenotypeState[locusId].length < 2) {
+      damGenotypeState[locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
+    }
+  });
 }
 
 /* ─── LOCUS SELECTOR & ALLELE SELECTORS ───────────────────────────────── */
@@ -203,9 +209,13 @@ function renderLocusSelector() {
         delete damGenotypeState[locusId];
       }
 
-      renderLocusSelector();
+      ensureStateNormalized();
       renderParentSelectors();
       runCalculator();
+
+      setTimeout(() => {
+        renderLocusSelector();
+      }, 0);
     });
 
     container.appendChild(item);
@@ -220,12 +230,14 @@ function renderParentSelectors() {
   sireContainer.innerHTML = '';
   damContainer.innerHTML = '';
 
+  ensureStateNormalized();
+
   currentSelectedLoci.forEach(locusId => {
     const locus = getLocusById(locusId);
     if (!locus) return;
 
-    if (!sireGenotypeState[locusId]) sireGenotypeState[locusId] = [...locus.defaultSire];
-    if (!damGenotypeState[locusId]) damGenotypeState[locusId] = locus.isSexLinked ? [locus.defaultDam[0], 'W'] : [...locus.defaultDam];
+    const sireVals = sireGenotypeState[locusId] || locus.defaultSire;
+    const damVals = damGenotypeState[locusId] || (locus.isSexLinked ? [locus.defaultDam[0], 'W'] : locus.defaultDam);
 
     // Sire Row
     const sireRow = document.createElement('div');
@@ -233,8 +245,8 @@ function renderParentSelectors() {
     sireRow.innerHTML = `
       <span class="locus-pair-label">${locus.locusName}:</span>
       <div style="display: flex; gap: 0.3rem;">
-        ${createAlleleSelectHtml(locus, sireGenotypeState[locusId][0], `sire-${locusId}-0`, false)}
-        ${createAlleleSelectHtml(locus, sireGenotypeState[locusId][1], `sire-${locusId}-1`, false)}
+        ${createAlleleSelectHtml(locus, sireVals[0], `sire-${locusId}-0`, false)}
+        ${createAlleleSelectHtml(locus, sireVals[1], `sire-${locusId}-1`, false)}
       </div>
     `;
     sireContainer.appendChild(sireRow);
@@ -245,8 +257,8 @@ function renderParentSelectors() {
     damRow.innerHTML = `
       <span class="locus-pair-label">${locus.locusName}:</span>
       <div style="display: flex; gap: 0.3rem;">
-        ${createAlleleSelectHtml(locus, damGenotypeState[locusId][0], `dam-${locusId}-0`, false)}
-        ${createAlleleSelectHtml(locus, damGenotypeState[locusId][1], `dam-${locusId}-1`, locus.isSexLinked)}
+        ${createAlleleSelectHtml(locus, damVals[0], `dam-${locusId}-0`, false)}
+        ${createAlleleSelectHtml(locus, damVals[1], `dam-${locusId}-1`, locus.isSexLinked)}
       </div>
     `;
     damContainer.appendChild(damRow);
@@ -269,11 +281,12 @@ function renderParentSelectors() {
 }
 
 function createAlleleSelectHtml(locus, selectedVal, id, isDamSexChromosome) {
+  if (!locus) return '';
   let optionsHtml = '';
   if (isDamSexChromosome) {
     optionsHtml += `<option value="W" selected>W (Female Chr)</option>`;
   } else {
-    locus.alleles.forEach(a => {
+    (locus.alleles || []).forEach(a => {
       const isSel = a.symbol === selectedVal ? 'selected' : '';
       optionsHtml += `<option value="${a.symbol}" ${isSel}>${a.name} (${a.symbol})</option>`;
     });
@@ -283,12 +296,17 @@ function createAlleleSelectHtml(locus, selectedVal, id, isDamSexChromosome) {
 
 /* ─── RUN CALCULATOR & RENDER RESULTS ──────────────────────────────────── */
 function runCalculator() {
-  const result = calculateCross(currentSelectedLoci, sireGenotypeState, damGenotypeState);
-  renderVisualSimpleOutcomes(result);
+  try {
+    ensureStateNormalized();
+    const result = calculateCross(currentSelectedLoci, sireGenotypeState, damGenotypeState);
+    renderVisualSimpleOutcomes(result);
 
-  const punnettData = buildPunnettTable(currentSelectedLoci, sireGenotypeState, damGenotypeState);
-  renderPunnettGrid(punnettData);
-  renderSummaryRatios(result);
+    const punnettData = buildPunnettTable(currentSelectedLoci, sireGenotypeState, damGenotypeState);
+    renderPunnettGrid(punnettData);
+    renderSummaryRatios(result);
+  } catch (err) {
+    console.error('Genetics Calculator Error:', err);
+  }
 }
 
 function flashResultsPanel() {
@@ -308,9 +326,9 @@ function renderVisualSimpleOutcomes(result) {
   const countEl = document.getElementById('outcomes-count');
   if (!container) return;
 
-  if (countEl) countEl.textContent = `${result.outcomes.length} Phenotypes (${result.totalCombinations} Combinations)`;
+  if (countEl) countEl.textContent = `${result.outcomes ? result.outcomes.length : 0} Phenotypes (${result.totalCombinations || 0} Combinations)`;
 
-  if (!result.outcomes || !result.outcomes.length) {
+  if (!result || !result.outcomes || !result.outcomes.length) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">🥚</div><p>Select loci or parent breeds to compute offspring.</p></div>`;
     return;
   }
@@ -328,7 +346,7 @@ function renderVisualSimpleOutcomes(result) {
         const isLethal = locusId === 'Et' && data.geno === 'Et/Et';
         const tagClass = isLethal ? 'tag warn' : (locus?.isSexLinked ? 'tag sex' : 'tag');
         const icon = isLethal ? '⚠️' : '🧬';
-        return `<span class="${tagClass}" title="Genotype: ${data.geno} (${locus?.locusName})">${icon} ${data.pheno}</span>`;
+        return `<span class="${tagClass}" title="Genotype: ${data.geno} (${locus?.locusName || locusId})">${icon} ${data.pheno}</span>`;
       }).join('');
 
     const mainPhenos = Object.entries(item.loci)
@@ -351,7 +369,7 @@ function renderVisualSimpleOutcomes(result) {
 
 function renderPunnettGrid(punnettData) {
   const gridContainer = document.getElementById('punnett-grid-container');
-  if (!gridContainer) return;
+  if (!gridContainer || !punnettData || !punnettData.sireHeaders) return;
 
   let tableHtml = `<table class="punnett-table"><thead><tr><th>Dam ↓ \\ Sire →</th>`;
   punnettData.sireHeaders.forEach(h => {
@@ -359,13 +377,13 @@ function renderPunnettGrid(punnettData) {
   });
   tableHtml += `</tr></thead><tbody>`;
 
-  punnettData.rows.forEach(row => {
+  (punnettData.rows || []).forEach(row => {
     tableHtml += `<tr><th>Egg (${row.header})</th>`;
-    row.cells.forEach(cell => {
+    (row.cells || []).forEach(cell => {
       const sexClass = cell.sex === 'F' ? 'f' : 'm';
       const sexLabel = cell.sex === 'F' ? '♀ Hen' : '♂ Rooster';
-      const genos = cell.pairs.map(p => p.geno).join(' ; ');
-      const phenos = cell.pairs.map(p => `${p.pheno}`).join('<br>');
+      const genos = (cell.pairs || []).map(p => p.geno).join(' ; ');
+      const phenos = (cell.pairs || []).map(p => `${p.pheno}`).join('<br>');
 
       tableHtml += `
         <td>
@@ -384,7 +402,7 @@ function renderPunnettGrid(punnettData) {
 
 function renderSummaryRatios(result) {
   const genotypeList = document.getElementById('genotype-ratios-list');
-  if (!genotypeList) return;
+  if (!genotypeList || !result || !result.outcomes) return;
 
   genotypeList.innerHTML = result.outcomes.map(item => {
     const genos = Object.entries(item.loci)
@@ -525,10 +543,12 @@ function renderPresetCrosses() {
 
       Object.keys(damGenotypeState).forEach(id => {
         const locus = getLocusById(id);
-        if (locus && locus.isSexLinked && damGenotypeState[id].length > 1) {
+        if (locus && locus.isSexLinked && Array.isArray(damGenotypeState[id]) && damGenotypeState[id].length > 1) {
           damGenotypeState[id][1] = 'W';
         }
       });
+
+      ensureStateNormalized();
 
       const sireNameEl = document.getElementById('sire-breed-name');
       const damNameEl = document.getElementById('dam-breed-name');
