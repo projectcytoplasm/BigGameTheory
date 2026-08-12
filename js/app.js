@@ -1,7 +1,6 @@
 /**
- * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.6
- * Lazy grid rendering, breed genotype merging, deduplicated gamete processing.
- * Bulletproof performance with zero freezes or crashes.
+ * Big Game Theory — Avian Genetics Matrix & Breeder Calculator v2.7
+ * Master Breeder Pass ($10/mo) gated fine-tuning, checkout workflow, and membership features.
  */
 
 import { CHICKEN_GENETICS_DATABASE, POPULAR_POULTRY_BREEDS, PRESET_BREEDING_CROSSES } from './geneticsData.js';
@@ -12,11 +11,13 @@ let currentSelectedLoci = ['O', 'Pti']; // Default Olive Egger loci
 let sireGenotypeState = { O: ['O', 'O'], Pti: ['pti^+', 'pti^+'] };
 let damGenotypeState = { O: ['o^+', 'o^+'], Pti: ['Pti', 'pti^+'] };
 let activeCategoryFilter = 'ALL';
+let isMember = false; // Membership Pass state
 
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initModeSwitcher();
   initEventDelegation();
+  initMembershipSystem();
   renderBreedPickerGrid();
   renderLocusSelector();
   renderParentSelectors();
@@ -34,6 +35,62 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.id === 'gene-modal') closeModal();
   });
 });
+
+/* ─── MEMBERSHIP SYSTEM ($10/MO GATE & CHECKOUT) ─────────────────────── */
+function initMembershipSystem() {
+  const lockOverlay = document.getElementById('lock-overlay');
+  const vipBadge = document.getElementById('vip-status-badge');
+  const demoBtn = document.getElementById('demo-toggle-btn');
+  const unlockNavBtn = document.getElementById('unlock-vip-nav-btn');
+  const subscribePassBtn = document.getElementById('subscribe-pass-btn');
+  const checkoutModal = document.getElementById('checkout-modal');
+  const checkoutClose = document.getElementById('checkout-close');
+  const checkoutForm = document.getElementById('checkout-form');
+
+  function updateMemberState(status) {
+    isMember = status;
+    if (isMember) {
+      if (lockOverlay) lockOverlay.style.display = 'none';
+      if (vipBadge) {
+        vipBadge.textContent = '👑 Master Breeder Pass Active ($10/mo)';
+        vipBadge.classList.add('unlocked');
+      }
+    } else {
+      if (lockOverlay) lockOverlay.style.display = 'flex';
+      if (vipBadge) {
+        vipBadge.textContent = '👑 Free Tier';
+        vipBadge.classList.remove('unlocked');
+      }
+    }
+  }
+
+  demoBtn?.addEventListener('click', () => {
+    updateMemberState(!isMember);
+    if (isMember) alert('🧪 Demo Mode Activated: Master Breeder Pass unlocked! You can now fine-tune all loci and alleles.');
+  });
+
+  unlockNavBtn?.addEventListener('click', () => {
+    document.querySelector('[data-tab="membership"]')?.click();
+  });
+
+  subscribePassBtn?.addEventListener('click', () => {
+    if (checkoutModal) checkoutModal.style.display = 'flex';
+  });
+
+  checkoutClose?.addEventListener('click', () => {
+    if (checkoutModal) checkoutModal.style.display = 'none';
+  });
+
+  checkoutForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    updateMemberState(true);
+    if (checkoutModal) checkoutModal.style.display = 'none';
+    alert('🎉 Welcome to the Big Game Theory Master Breeder Club! Your $10/mo Breeder Pass is active. All advanced fine-tuning features and priority reservation channels are unlocked.');
+    document.querySelector('[data-tab="studio"]')?.click();
+  });
+
+  updateMemberState(false);
+}
 
 /* ─── GLOBAL EVENT DELEGATION ─────────────────────────────────────────── */
 function initEventDelegation() {
@@ -177,7 +234,6 @@ function applyBreedToParent(parent, breed) {
   if (!breed || !breed.genotype) return;
   const breedGenotype = JSON.parse(JSON.stringify(breed.genotype));
 
-  // Merge breed's loci into active selected loci (max 4)
   Object.keys(breedGenotype).forEach(id => {
     if (!currentSelectedLoci.includes(id)) {
       if (currentSelectedLoci.length < 4) {
@@ -270,7 +326,6 @@ function renderParentSelectors() {
     const sireVals = sireGenotypeState[locusId] || locus.defaultSire;
     const damVals = damGenotypeState[locusId] || (locus.isSexLinked ? [locus.defaultDam[0], 'W'] : locus.defaultDam);
 
-    // Sire Row
     const sireRow = document.createElement('div');
     sireRow.className = 'locus-pair-row';
     sireRow.innerHTML = `
@@ -282,7 +337,6 @@ function renderParentSelectors() {
     `;
     sireContainer.appendChild(sireRow);
 
-    // Dam Row
     const damRow = document.createElement('div');
     damRow.className = 'locus-pair-row';
     damRow.innerHTML = `

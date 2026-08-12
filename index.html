@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Big Game Theory — Avian Genetics & Breeder Calculator</title>
-  <meta name="description" content="Comprehensive chicken genetic mutations database and Punnett square calculator for heritage poultry breeders. Big Game Theory — Old Breeds, New Standards.">
+  <meta name="description" content="Comprehensive chicken genetic mutations database, Punnett square calculator, and Master Breeder Club for heritage poultry preservation. Big Game Theory — Old Breeds, New Standards.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,52 +20,28 @@
         <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:0.6"/>
       </linearGradient>
     </defs>
-    <!-- Left spine -->
     <path d="M20,0 Q60,50 20,100 Q-20,150 20,200 Q60,250 20,300 Q-20,350 20,400 Q60,450 20,500 Q-20,550 20,600 Q60,650 20,700 Q-20,750 20,800" stroke="url(#strandGrad)" stroke-width="2" fill="none" opacity="0.4"/>
-    <!-- Right spine -->
     <path d="M100,0 Q60,50 100,100 Q140,150 100,200 Q60,250 100,300 Q140,350 100,400 Q60,450 100,500 Q140,550 100,600 Q60,650 100,700 Q140,750 100,800" stroke="url(#strandGrad)" stroke-width="2" fill="none" opacity="0.4"/>
-    <!-- Rungs -->
     <g opacity="0.3" stroke="#D4AF37" stroke-width="1.5">
       <line x1="20" y1="25" x2="100" y2="75"/><line x1="20" y1="75" x2="100" y2="25"/>
       <line x1="20" y1="125" x2="100" y2="175"/><line x1="20" y1="175" x2="100" y2="125"/>
       <line x1="20" y1="225" x2="100" y2="275"/><line x1="20" y1="275" x2="100" y2="225"/>
       <line x1="20" y1="325" x2="100" y2="375"/><line x1="20" y1="375" x2="100" y2="325"/>
       <line x1="20" y1="425" x2="100" y2="475"/><line x1="20" y1="475" x2="100" y2="425"/>
-      <line x1="20" y1="525" x2="100" y2="575"/><line x1="20" y1="575" x2="100" y2="525"/>
-      <line x1="20" y1="625" x2="100" y2="675"/><line x1="20" y1="675" x2="100" y2="625"/>
     </g>
-    <!-- Nucleotide dots -->
     <g fill="#E97A15" opacity="0.5">
       <circle cx="20" cy="25" r="4"/><circle cx="100" cy="75" r="4"/>
       <circle cx="20" cy="75" r="4"/><circle cx="100" cy="25" r="4"/>
       <circle cx="20" cy="125" r="4"/><circle cx="100" cy="175" r="4"/>
       <circle cx="20" cy="175" r="4"/><circle cx="100" cy="125" r="4"/>
-      <circle cx="20" cy="225" r="4"/><circle cx="100" cy="275" r="4"/>
-      <circle cx="20" cy="275" r="4"/><circle cx="100" cy="225" r="4"/>
-      <circle cx="20" cy="325" r="4"/><circle cx="100" cy="375" r="4"/>
-      <circle cx="20" cy="375" r="4"/><circle cx="100" cy="325" r="4"/>
-      <circle cx="20" cy="425" r="4"/><circle cx="100" cy="475" r="4"/>
-      <circle cx="20" cy="475" r="4"/><circle cx="100" cy="425" r="4"/>
-      <circle cx="20" cy="525" r="4"/><circle cx="100" cy="575" r="4"/>
     </g>
   </svg>
   <svg class="dna-strand dna-right" viewBox="0 0 120 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-    <use href="#strandGrad"/>
     <path d="M20,0 Q60,50 20,100 Q-20,150 20,200 Q60,250 20,300 Q-20,350 20,400 Q60,450 20,500 Q-20,550 20,600 Q60,650 20,700 Q-20,750 20,800" stroke="#174A4B" stroke-width="2" fill="none" opacity="0.35"/>
     <path d="M100,0 Q60,50 100,100 Q140,150 100,200 Q60,250 100,300 Q140,350 100,400 Q60,450 100,500 Q140,550 100,600 Q60,650 100,700 Q140,750 100,800" stroke="#174A4B" stroke-width="2" fill="none" opacity="0.35"/>
     <g opacity="0.25" stroke="#2DD4BF" stroke-width="1.5">
       <line x1="20" y1="25" x2="100" y2="75"/><line x1="20" y1="75" x2="100" y2="25"/>
       <line x1="20" y1="125" x2="100" y2="175"/><line x1="20" y1="175" x2="100" y2="125"/>
-      <line x1="20" y1="225" x2="100" y2="275"/><line x1="20" y1="275" x2="100" y2="225"/>
-      <line x1="20" y1="325" x2="100" y2="375"/><line x1="20" y1="375" x2="100" y2="325"/>
-      <line x1="20" y1="425" x2="100" y2="475"/><line x1="20" y1="475" x2="100" y2="425"/>
-    </g>
-    <g fill="#2DD4BF" opacity="0.4">
-      <circle cx="20" cy="25" r="3.5"/><circle cx="100" cy="75" r="3.5"/>
-      <circle cx="20" cy="75" r="3.5"/><circle cx="100" cy="25" r="3.5"/>
-      <circle cx="20" cy="125" r="3.5"/><circle cx="100" cy="175" r="3.5"/>
-      <circle cx="20" cy="175" r="3.5"/><circle cx="100" cy="125" r="3.5"/>
-      <circle cx="20" cy="225" r="3.5"/><circle cx="100" cy="275" r="3.5"/>
     </g>
   </svg>
 </div>
@@ -92,6 +68,7 @@
       <button class="tab-btn active" data-tab="studio">🧬 Calculator</button>
       <button class="tab-btn" data-tab="database">📖 Mutations Library</button>
       <button class="tab-btn" data-tab="presets">⚡ Preset Crosses</button>
+      <button class="tab-btn tab-vip" data-tab="membership">👑 Breeder Pass ($10/mo)</button>
       <button class="tab-btn" data-tab="mission">🛡️ Our Mission</button>
     </nav>
   </div>
@@ -104,11 +81,12 @@
   <div class="hero-content">
     <div class="hero-badge-row">
       <span class="tagline-badge">Old Breeds, New Standards</span>
-      <span class="wip-badge">🚧 Work in Progress — Beta v0.9.5</span>
+      <span class="wip-badge">🚧 Work in Progress — Beta v0.9.6</span>
+      <span class="vip-pill-badge" id="vip-status-badge">👑 Free Tier</span>
     </div>
     <h2 class="hero-title">Avian Genetics &amp; Breeder Calculator</h2>
     <p class="hero-subtitle">
-      Select parent breeds in Visual Mode to preview offspring outcomes, or switch to Advanced Mode for full Punnett matrices, allele notation, and ZW/ZZ sex-linkage analysis.
+      Select parent breeds in Visual Mode to preview offspring outcomes. Unlock the <strong>$10/mo Breeder Pass</strong> for priority bloodline drops, pedigree certificates, and unlimited fine-tuning.
     </p>
     <div class="hero-stats">
       <div class="stat-pill">
@@ -128,7 +106,6 @@
     </div>
   </div>
 
-  <!-- Animated atomic egg -->
   <div class="hero-graphic" aria-hidden="true">
     <div class="orbit-wrap">
       <div class="orbit ring-1"><div class="electron e1"></div></div>
@@ -186,27 +163,44 @@
           <div class="breed-grid" id="dam-breed-picker"></div>
         </div>
 
-        <!-- Advanced Allele Fine-Tuning -->
-        <details class="advanced-detail" id="advanced-detail">
-          <summary class="advanced-summary">
-            <span>⚙️</span> Fine-Tune Loci &amp; Alleles
-            <span class="detail-arrow">›</span>
-          </summary>
-          <div class="advanced-inner">
-            <p style="font-size:0.8rem; color:var(--color-parchment-muted); margin-bottom:0.75rem;">Select up to 4 loci to cross simultaneously:</p>
-            <div class="locus-list" id="locus-selector-list"></div>
-            <div class="allele-selectors">
-              <div class="allele-parent-box">
-                <div class="allele-parent-label">🐓 Sire Alleles (ZZ)</div>
-                <div id="sire-allele-container"></div>
-              </div>
-              <div class="allele-parent-box">
-                <div class="allele-parent-label">🐔 Dam Alleles (ZW)</div>
-                <div id="dam-allele-container"></div>
+        <!-- Fine-Tuning Section (MEMBERS ONLY GATE) -->
+        <div class="advanced-detail-wrapper" id="fine-tune-wrapper">
+          
+          <!-- Locked Overlay Banner (shown for Free Users) -->
+          <div class="lock-overlay" id="lock-overlay">
+            <div class="lock-card">
+              <div class="lock-icon">🔒</div>
+              <h3>Members-Only Fine-Tuning</h3>
+              <p>Unlock custom allele modification, multi-locus customization, and exportable pedigree reports with the <strong>$10/mo Breeder Pass</strong>.</p>
+              <div class="lock-btn-group">
+                <button class="unlock-vip-btn" id="unlock-vip-nav-btn">👑 Join Breeder Club ($10/mo)</button>
+                <button class="demo-toggle-btn" id="demo-toggle-btn">🧪 Demo Mode (Instant Unlock)</button>
               </div>
             </div>
           </div>
-        </details>
+
+          <!-- Fine-Tuning Box -->
+          <details class="advanced-detail" id="advanced-detail">
+            <summary class="advanced-summary">
+              <span>⚙️</span> Fine-Tune Loci &amp; Alleles
+              <span class="detail-arrow">›</span>
+            </summary>
+            <div class="advanced-inner">
+              <p style="font-size:0.8rem; color:var(--c-muted); margin-bottom:0.75rem;">Select up to 4 loci to cross simultaneously:</p>
+              <div class="locus-list" id="locus-selector-list"></div>
+              <div class="allele-selectors">
+                <div class="allele-parent-box">
+                  <div class="allele-parent-label">🐓 Sire Alleles (ZZ)</div>
+                  <div id="sire-allele-container"></div>
+                </div>
+                <div class="allele-parent-box">
+                  <div class="allele-parent-label">🐔 Dam Alleles (ZW)</div>
+                  <div id="dam-allele-container"></div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
 
         <button class="calc-btn" id="run-calc-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
@@ -216,8 +210,6 @@
 
       <!-- RIGHT: Results Panel -->
       <section class="results-panel">
-
-        <!-- Visual Outcomes -->
         <div id="simple-outcomes-section">
           <div class="results-header">
             <h3 class="results-title">🐥 Predicted Offspring</h3>
@@ -231,7 +223,6 @@
           </div>
         </div>
 
-        <!-- Advanced Punnett (shown in advanced mode) -->
         <div id="advanced-matrix-section" class="advanced-matrix-section" style="display:none;">
           <h3 class="results-title" style="margin-bottom:1rem;">📊 Full Punnett Matrix</h3>
           <div class="punnett-scroll" id="punnett-grid-container"></div>
@@ -242,7 +233,6 @@
             </div>
           </div>
         </div>
-
       </section>
     </div>
   </div>
@@ -257,7 +247,7 @@
     <div class="lib-toolbar">
       <div class="search-wrap">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="search-input" id="mutations-search" placeholder="Search by symbol, category, breed...">
+        <input type="text" class="search-input" id="mutations-search" placeholder="Search by mutation name, symbol, category, breed...">
       </div>
       <div class="filter-pills" id="category-filters"></div>
     </div>
@@ -274,7 +264,86 @@
     <div class="presets-grid" id="presets-grid"></div>
   </div>
 
-  <!-- ── TAB 4: MISSION ────────────────────────── -->
+  <!-- ── TAB 4: MEMBERSHIP PAGE ($10/MO) ───────── -->
+  <div class="tab-content" id="tab-membership">
+    <div class="vip-header">
+      <span class="tagline-badge">Big Game Theory Stewardship</span>
+      <h2 class="vip-title">Master Breeder Pass</h2>
+      <p class="vip-subtitle">Get direct priority access to our rare preservation bloodlines before public drops, along with unlimited genetics fine-tuning and pedigree tools.</p>
+    </div>
+
+    <!-- Pricing Toggle Cards -->
+    <div class="pricing-grid">
+      
+      <!-- Free Tier Card -->
+      <div class="price-card free-card">
+        <div class="price-badge">Free Steward</div>
+        <div class="price-amount">$0 <span>/ month</span></div>
+        <p class="price-desc">Ideal for backyard keepers exploring heritage poultry genetics and standard breed crosses.</p>
+        
+        <ul class="feature-list">
+          <li>✅ Visual Breed &amp; Trait Calculator</li>
+          <li>✅ Access to 40+ Genetic Mutations Library</li>
+          <li>✅ 12 Real-World Preset Crosses</li>
+          <li>❌ Fine-Tune Custom Loci &amp; Alleles</li>
+          <li>❌ Priority Bloodline &amp; Hatching Egg Reservations</li>
+          <li>❌ Digital Pedigree &amp; Certificate Generator</li>
+          <li>❌ 1-on-1 Master Breeder Pair Matchmaking</li>
+        </ul>
+
+        <button class="plan-btn secondary" disabled>Current Free Plan</button>
+      </div>
+
+      <!-- Pro Breeder Pass ($10/mo) -->
+      <div class="price-card pro-card">
+        <div class="vip-ribbon">POPULAR</div>
+        <div class="price-badge gold">👑 Master Breeder Pass</div>
+        <div class="price-amount gold">$10 <span>/ month</span></div>
+        <p class="price-desc">For serious preservationists, heritage breeders, and rare bloodline enthusiasts.</p>
+
+        <ul class="feature-list">
+          <li>✅ <strong>Priority Access</strong> to Ayam Cemani, Ameraucana &amp; Marans hatching eggs (7 days before public drops)</li>
+          <li>✅ <strong>Unlimited Fine-Tuning</strong> of custom loci, allele pairs &amp; multi-locus Punnett matrices</li>
+          <li>✅ <strong>Exportable Pedigree Certificates</strong> for your flock with QR authenticity validation</li>
+          <li>✅ <strong>1-on-1 Genetics Consultation</strong> with Big Game Theory Master Breeders</li>
+          <li>✅ <strong>Experimental Preset Crosses</strong> (F3 Backcrosses, Fibro Easter Eggers, Sizzles)</li>
+        </ul>
+
+        <button class="plan-btn gold" id="subscribe-pass-btn">👑 Join Master Breeder Pass ($10/mo)</button>
+        <span class="sub-guarantee">Cancel anytime. 100% of membership fees directly fund our rare breed preservation farm.</span>
+      </div>
+
+    </div>
+
+    <!-- Member Exclusive Perks Showcase -->
+    <div class="perks-section">
+      <h3 class="perks-title">What You Unlock as a Breeder Pass Member</h3>
+      <div class="perks-grid">
+        <div class="perk-card">
+          <div class="perk-icon">🥚</div>
+          <h4>Priority Bloodline Drops</h4>
+          <p>Get first right of refusal on limited seasonal hatching eggs, day-old chicks, and started breeding stock before public catalog releases.</p>
+        </div>
+        <div class="perk-card">
+          <div class="perk-icon">🔬</div>
+          <h4>Unlocked Calculator Fine-Tuning</h4>
+          <p>Full control over allele dominance, sex-linked ZW matrices, and custom multi-locus combinations for your specific flock genetics.</p>
+        </div>
+        <div class="perk-card">
+          <div class="perk-icon">📜</div>
+          <h4>Digital Pedigree Reports</h4>
+          <p>Generate clean, printable PDF certificates of genetic authenticity for your sold chicks and breeding pairs.</p>
+        </div>
+        <div class="perk-card">
+          <div class="perk-icon">💬</div>
+          <h4>Master Breeder Matchmaking</h4>
+          <p>Direct messaging with our Virginia Beach farm team to evaluate test crosses, fix feather flaws, and prevent inbreeding depression.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB 5: MISSION ────────────────────────── -->
   <div class="tab-content" id="tab-mission">
     <div class="mission-card">
       <h2 class="mission-title">Big Game Theory</h2>
@@ -318,6 +387,41 @@
   </div>
 
 </main>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SUBSCRIBE MODAL (SIMULATED STRIPE CHECKOUT) -->
+<!-- ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="checkout-modal" style="display:none;">
+  <div class="modal-card">
+    <button class="modal-close" id="checkout-close">✕</button>
+    <div class="checkout-header">
+      <div class="logo-badge" style="margin:0 auto 0.75rem;">
+        <svg viewBox="0 0 24 24" fill="#D4AF37"><circle cx="12" cy="12" r="9"/></svg>
+      </div>
+      <h2 style="font-family:var(--font-h); color:var(--c-gold); text-align:center;">Join Master Breeder Club</h2>
+      <p style="text-align:center; color:var(--c-muted); font-size:0.88rem;">$10.00 / month • Cancel anytime</p>
+    </div>
+
+    <form id="checkout-form" style="margin-top:1.5rem;">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" required placeholder="e.g. Eleanor Vance">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" required placeholder="breeder@farm.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Simulated Card Details</label>
+        <input type="text" class="form-input" value="•••• •••• •••• 4242" readonly>
+      </div>
+
+      <button type="submit" class="calc-btn" style="margin-top:1.25rem;">
+        👑 Activate Breeder Pass ($10/mo)
+      </button>
+    </form>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════ -->
 <!-- GENE PHENOTYPE PREVIEW MODAL              -->
