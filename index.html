@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Big Game Theory — Avian Genetics & Breeder Calculator</title>
-  <meta name="description" content="Comprehensive chicken genetic mutations database, Punnett square calculator, and Master Breeder Club for heritage poultry preservation. Big Game Theory — Old Breeds, New Standards.">
+  <title>Big Game Theory — Avian Genetics & Preservation Operations</title>
+  <meta name="description" content="Specialized preservation operations for Blue Rosecomb Bantams, Pure Surinam Black & Blues, Porcelain D'Uccle Bantams, and Aseel Gamefowl. Genetics calculator & Master Breeder Club.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -25,24 +25,11 @@
     <g opacity="0.3" stroke="#D4AF37" stroke-width="1.5">
       <line x1="20" y1="25" x2="100" y2="75"/><line x1="20" y1="75" x2="100" y2="25"/>
       <line x1="20" y1="125" x2="100" y2="175"/><line x1="20" y1="175" x2="100" y2="125"/>
-      <line x1="20" y1="225" x2="100" y2="275"/><line x1="20" y1="275" x2="100" y2="225"/>
-      <line x1="20" y1="325" x2="100" y2="375"/><line x1="20" y1="375" x2="100" y2="325"/>
-      <line x1="20" y1="425" x2="100" y2="475"/><line x1="20" y1="475" x2="100" y2="425"/>
-    </g>
-    <g fill="#E97A15" opacity="0.5">
-      <circle cx="20" cy="25" r="4"/><circle cx="100" cy="75" r="4"/>
-      <circle cx="20" cy="75" r="4"/><circle cx="100" cy="25" r="4"/>
-      <circle cx="20" cy="125" r="4"/><circle cx="100" cy="175" r="4"/>
-      <circle cx="20" cy="175" r="4"/><circle cx="100" cy="125" r="4"/>
     </g>
   </svg>
   <svg class="dna-strand dna-right" viewBox="0 0 120 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
     <path d="M20,0 Q60,50 20,100 Q-20,150 20,200 Q60,250 20,300 Q-20,350 20,400 Q60,450 20,500 Q-20,550 20,600 Q60,650 20,700 Q-20,750 20,800" stroke="#174A4B" stroke-width="2" fill="none" opacity="0.35"/>
     <path d="M100,0 Q60,50 100,100 Q140,150 100,200 Q60,250 100,300 Q140,350 100,400 Q60,450 100,500 Q140,550 100,600 Q60,650 100,700 Q140,750 100,800" stroke="#174A4B" stroke-width="2" fill="none" opacity="0.35"/>
-    <g opacity="0.25" stroke="#2DD4BF" stroke-width="1.5">
-      <line x1="20" y1="25" x2="100" y2="75"/><line x1="20" y1="75" x2="100" y2="25"/>
-      <line x1="20" y1="125" x2="100" y2="175"/><line x1="20" y1="175" x2="100" y2="125"/>
-    </g>
   </svg>
 </div>
 
@@ -60,16 +47,16 @@
       </div>
       <div class="brand-text">
         <h1>Big Game Theory</h1>
-        <span>Heritage Poultry • Preservation • Genetics</span>
+        <span>Specialty Heritage &amp; Game Preservation</span>
       </div>
     </a>
 
     <nav class="nav-tabs" id="main-nav">
       <button class="tab-btn active" data-tab="studio">🧬 Calculator</button>
       <button class="tab-btn" data-tab="database">📖 Mutations Library</button>
-      <button class="tab-btn" data-tab="presets">⚡ Preset Crosses</button>
+      <button class="tab-btn" data-tab="presets">⚡ Specialized Crosses</button>
       <button class="tab-btn tab-vip" data-tab="membership">👑 Breeder Pass ($10/mo)</button>
-      <button class="tab-btn" data-tab="mission">🛡️ Our Mission</button>
+      <button class="tab-btn" data-tab="mission">🛡️ Our Lines</button>
     </nav>
   </div>
 </header>
@@ -81,17 +68,17 @@
   <div class="hero-content">
     <div class="hero-badge-row">
       <span class="tagline-badge">Old Breeds, New Standards</span>
-      <span class="wip-badge">🚧 Work in Progress — Beta v0.9.6</span>
+      <span class="wip-badge">🌹 Rosecombs • 🦅 Surinams • 🕊️ D'Uccles • 🥊 Aseels</span>
       <span class="vip-pill-badge" id="vip-status-badge">👑 Free Tier</span>
     </div>
     <h2 class="hero-title">Avian Genetics &amp; Breeder Calculator</h2>
     <p class="hero-subtitle">
-      Select parent breeds in Visual Mode to preview offspring outcomes. Unlock the <strong>$10/mo Breeder Pass</strong> for priority bloodline drops, pedigree certificates, and unlimited fine-tuning.
+      Specialized operations focusing on <strong>Blue Rosecomb Bantams</strong>, <strong>Pure Surinam Black &amp; Blues</strong>, <strong>Porcelain D'Uccle Bantams</strong>, and upcoming <strong>Aseel Gamefowl</strong>. Join the <strong>$10/mo Breeder Pass</strong> for priority reservation drops before public releases.
     </p>
     <div class="hero-stats">
       <div class="stat-pill">
-        <span class="stat-num">40+</span>
-        <span class="stat-lbl">Genetic Loci</span>
+        <span class="stat-num">4</span>
+        <span class="stat-lbl">Specialty Bloodlines</span>
       </div>
       <div class="stat-sep"></div>
       <div class="stat-pill">
@@ -100,8 +87,8 @@
       </div>
       <div class="stat-sep"></div>
       <div class="stat-pill">
-        <span class="stat-num">12</span>
-        <span class="stat-lbl">Preset Crosses</span>
+        <span class="stat-num">100%</span>
+        <span class="stat-lbl">Free Web Hosted</span>
       </div>
     </div>
   </div>
@@ -124,14 +111,13 @@
   <!-- ── TAB 1: CALCULATOR STUDIO ─────────────── -->
   <div class="tab-content active" id="tab-studio">
 
-    <!-- Mode Bar -->
     <div class="mode-bar">
       <span class="mode-bar-label">Mode:</span>
       <div class="mode-switch-group">
         <button class="mode-btn active" data-mode="simple" id="mode-simple">✨ Visual Breed Mode</button>
         <button class="mode-btn" data-mode="advanced" id="mode-advanced">🔬 Advanced Punnett</button>
       </div>
-      <span class="mode-hint" id="mode-hint">Select breeds below to calculate offspring</span>
+      <span class="mode-hint" id="mode-hint">Select specialized parent breeds to calculate offspring</span>
     </div>
 
     <div class="calculator-grid">
@@ -145,7 +131,7 @@
             <span class="parent-icon">♂️</span>
             <div>
               <div class="parent-title">Sire — Rooster (ZZ)</div>
-              <div class="parent-breed-selected" id="sire-breed-name">Click a breed below to select</div>
+              <div class="parent-breed-selected" id="sire-breed-name">Select a breed below</div>
             </div>
           </div>
           <div class="breed-grid" id="sire-breed-picker"></div>
@@ -157,7 +143,7 @@
             <span class="parent-icon">♀️</span>
             <div>
               <div class="parent-title">Dam — Hen (ZW)</div>
-              <div class="parent-breed-selected" id="dam-breed-name">Click a breed below to select</div>
+              <div class="parent-breed-selected" id="dam-breed-name">Select a breed below</div>
             </div>
           </div>
           <div class="breed-grid" id="dam-breed-picker"></div>
@@ -166,7 +152,6 @@
         <!-- Fine-Tuning Section (MEMBERS ONLY GATE) -->
         <div class="advanced-detail-wrapper" id="fine-tune-wrapper">
           
-          <!-- Locked Overlay Banner (shown for Free Users) -->
           <div class="lock-overlay" id="lock-overlay">
             <div class="lock-card">
               <div class="lock-icon">🔒</div>
@@ -179,7 +164,6 @@
             </div>
           </div>
 
-          <!-- Fine-Tuning Box -->
           <details class="advanced-detail" id="advanced-detail">
             <summary class="advanced-summary">
               <span>⚙️</span> Fine-Tune Loci &amp; Alleles
@@ -241,13 +225,13 @@
   <div class="tab-content" id="tab-database">
     <div class="lib-header">
       <h2 class="lib-title">Chicken Genetic Mutations Library</h2>
-      <p class="lib-subtitle">40+ documented genetic loci with inheritance modes, breed examples, and scientific descriptions</p>
+      <p class="lib-subtitle">Comprehensive genetics reference covering Rosecombs, Fibromelanic Surinams, D'Uccles, and Gamefowl loci</p>
     </div>
 
     <div class="lib-toolbar">
       <div class="search-wrap">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="search-input" id="mutations-search" placeholder="Search by mutation name, symbol, category, breed...">
+        <input type="text" class="search-input" id="mutations-search" placeholder="Search by mutation name, symbol, category...">
       </div>
       <div class="filter-pills" id="category-filters"></div>
     </div>
@@ -258,8 +242,8 @@
   <!-- ── TAB 3: PRESET CROSSES ─────────────────── -->
   <div class="tab-content" id="tab-presets">
     <div class="lib-header">
-      <h2 class="lib-title">Preset Breeding Crosses</h2>
-      <p class="lib-subtitle">12 real-world heritage poultry crosses — click any to load into the Calculator Studio</p>
+      <h2 class="lib-title">Specialized Breeding Crosses</h2>
+      <p class="lib-subtitle">Curated crosses for Blue Rosecombs, Surinam Fibro Blacks &amp; Blues, Porcelain D'Uccles, and Aseels</p>
     </div>
     <div class="presets-grid" id="presets-grid"></div>
   </div>
@@ -269,22 +253,22 @@
     <div class="vip-header">
       <span class="tagline-badge">Big Game Theory Stewardship</span>
       <h2 class="vip-title">Master Breeder Pass</h2>
-      <p class="vip-subtitle">Get direct priority access to our rare preservation bloodlines before public drops, along with unlimited genetics fine-tuning and pedigree tools.</p>
+      <p class="vip-subtitle">Get direct priority access to our <strong>Blue Rosecomb Bantams</strong>, <strong>Pure Surinam Black &amp; Blues</strong>, <strong>Porcelain D'Uccle Bantams</strong>, and upcoming <strong>Aseel Gamefowl</strong> before public releases.</p>
     </div>
 
-    <!-- Pricing Toggle Cards -->
+    <!-- Pricing Grid -->
     <div class="pricing-grid">
       
       <!-- Free Tier Card -->
       <div class="price-card free-card">
         <div class="price-badge">Free Steward</div>
         <div class="price-amount">$0 <span>/ month</span></div>
-        <p class="price-desc">Ideal for backyard keepers exploring heritage poultry genetics and standard breed crosses.</p>
+        <p class="price-desc">Ideal for enthusiasts exploring standard breed crosses and basic genetics reference.</p>
         
         <ul class="feature-list">
           <li>✅ Visual Breed &amp; Trait Calculator</li>
           <li>✅ Access to 40+ Genetic Mutations Library</li>
-          <li>✅ 12 Real-World Preset Crosses</li>
+          <li>✅ Specialized Breeding Presets</li>
           <li>❌ Fine-Tune Custom Loci &amp; Alleles</li>
           <li>❌ Priority Bloodline &amp; Hatching Egg Reservations</li>
           <li>❌ Digital Pedigree &amp; Certificate Generator</li>
@@ -299,82 +283,82 @@
         <div class="vip-ribbon">POPULAR</div>
         <div class="price-badge gold">👑 Master Breeder Pass</div>
         <div class="price-amount gold">$10 <span>/ month</span></div>
-        <p class="price-desc">For serious preservationists, heritage breeders, and rare bloodline enthusiasts.</p>
+        <p class="price-desc">For serious preservationists &amp; breeders working with Rosecombs, Surinams, D'Uccles, and Aseels.</p>
 
         <ul class="feature-list">
-          <li>✅ <strong>Priority Access</strong> to Ayam Cemani, Ameraucana &amp; Marans hatching eggs (7 days before public drops)</li>
+          <li>✅ <strong>Priority Access</strong> to Blue Rosecomb Bantam, Pure Surinam Black &amp; Blue, and Porcelain D'Uccle hatching eggs &amp; stock (7-day head start before public drops)</li>
+          <li>✅ <strong>Early Reservation</strong> for upcoming Aseel Oriental Gamefowl bloodline releases</li>
           <li>✅ <strong>Unlimited Fine-Tuning</strong> of custom loci, allele pairs &amp; multi-locus Punnett matrices</li>
-          <li>✅ <strong>Exportable Pedigree Certificates</strong> for your flock with QR authenticity validation</li>
-          <li>✅ <strong>1-on-1 Genetics Consultation</strong> with Big Game Theory Master Breeders</li>
-          <li>✅ <strong>Experimental Preset Crosses</strong> (F3 Backcrosses, Fibro Easter Eggers, Sizzles)</li>
+          <li>✅ <strong>Exportable Pedigree Certificates</strong> for your breeding stock with QR authenticity validation</li>
+          <li>✅ <strong>1-on-1 Genetics Matchmaking</strong> with Big Game Theory Master Breeders</li>
         </ul>
 
         <button class="plan-btn gold" id="subscribe-pass-btn">👑 Join Master Breeder Pass ($10/mo)</button>
-        <span class="sub-guarantee">Cancel anytime. 100% of membership fees directly fund our rare breed preservation farm.</span>
+        <span class="sub-guarantee">Cancel anytime. 100% of membership fees directly fund our specialized preservation operations.</span>
       </div>
 
     </div>
 
-    <!-- Member Exclusive Perks Showcase -->
+    <!-- Member Perks Showcase -->
     <div class="perks-section">
-      <h3 class="perks-title">What You Unlock as a Breeder Pass Member</h3>
+      <h3 class="perks-title">Specialty Bloodline Benefits</h3>
       <div class="perks-grid">
         <div class="perk-card">
-          <div class="perk-icon">🥚</div>
-          <h4>Priority Bloodline Drops</h4>
-          <p>Get first right of refusal on limited seasonal hatching eggs, day-old chicks, and started breeding stock before public catalog releases.</p>
+          <div class="perk-icon">🌹</div>
+          <h4>Blue Rosecomb Bantams</h4>
+          <p>Priority access to clean-headed, broad-feathered Rosecomb bantam stock with ideal slate blue &amp; splash color ratio genetics.</p>
         </div>
         <div class="perk-card">
-          <div class="perk-icon">🔬</div>
-          <h4>Unlocked Calculator Fine-Tuning</h4>
-          <p>Full control over allele dominance, sex-linked ZW matrices, and custom multi-locus combinations for your specific flock genetics.</p>
+          <div class="perk-icon">🦅</div>
+          <h4>Pure Surinam Black &amp; Blues</h4>
+          <p>Direct access to our South American Fibromelanic game strain — deep black skin, internal hyperpigmentation, and blue plumage lines.</p>
         </div>
         <div class="perk-card">
-          <div class="perk-icon">📜</div>
-          <h4>Digital Pedigree Reports</h4>
-          <p>Generate clean, printable PDF certificates of genetic authenticity for your sold chicks and breeding pairs.</p>
+          <div class="perk-icon">🕊️</div>
+          <h4>Porcelain D'Uccle Bantams</h4>
+          <p>True-breeding Belgian D'Uccle bantams featuring dense boot feathering, full muffs &amp; beard, and soft lavender porcelain tipping.</p>
         </div>
         <div class="perk-card">
-          <div class="perk-icon">💬</div>
-          <h4>Master Breeder Matchmaking</h4>
-          <p>Direct messaging with our Virginia Beach farm team to evaluate test crosses, fix feather flaws, and prevent inbreeding depression.</p>
+          <div class="perk-icon">🥊</div>
+          <h4>Upcoming Aseels</h4>
+          <p>First reservation rights on our upcoming Oriental Aseel gamefowl line — thick brow structure, pea combs, and muscular bone density.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── TAB 5: MISSION ────────────────────────── -->
+  <!-- ── TAB 5: OUR LINES / MISSION ────────────── -->
   <div class="tab-content" id="tab-mission">
     <div class="mission-card">
-      <h2 class="mission-title">Big Game Theory</h2>
+      <h2 class="mission-title">Big Game Theory Preservation Lines</h2>
       <p class="mission-quote">"We don't just raise chickens. We raise the bar."</p>
 
       <div class="mission-story">
-        <h3>Our Story</h3>
-        <p>Big Game Theory was born from a belief in the power of preservation, the value of heritage, and the potential of genetics. We are a small farm with a big mission: to protect rare and historic poultry breeds while setting new standards for health, function, and sustainability. Through intentional breeding and stewardship, we preserve the past—so future generations can build something even better.</p>
+        <h3>Our Specialty Focus</h3>
+        <p>Big Game Theory is a specialized preservation-focused operation dedicated to select high-standard poultry strains. We intentionally focus our facility on four distinct bloodlines: <strong>Blue Rosecomb Bantams</strong>, <strong>Pure Surinam Black &amp; Blues</strong>, <strong>Porcelain D'Uccle Bantams</strong>, and in the coming future, <strong>Aseel Oriental Gamefowl</strong>. Through rigorous selection, genetic tracking, and line breeding, we protect historic phenotypes while setting new benchmarks for vigor and type.</p>
       </div>
 
-      <h3 class="values-title">Our Core Values</h3>
+      <h3 class="values-title">Our Bloodline Standards</h3>
       <div class="values-grid">
         <div class="value-card">
-          <div class="value-icon">🥚</div>
-          <h4>PRESERVE</h4>
-          <p>Protecting rare breeds for future generations against genetic bottlenecks and commercial extinction pressure.</p>
+          <div class="value-icon">🌹</div>
+          <h4>BLUE ROSECOMBS</h4>
+          <p>Precision rose combs, snow-white earlobes, and clean slate blue/splash feathering on compact bantam frames.</p>
         </div>
         <div class="value-card">
-          <div class="value-icon">⚛️</div>
-          <h4>IMPROVE</h4>
-          <p>Applying modern genetic science to strengthen heritage breed vigor, health traits, and production standards.</p>
+          <div class="value-icon">🦅</div>
+          <h4>SURINAM BLACK &amp; BLUE</h4>
+          <p>Deep fibromelanic hyperpigmentation (black skin &amp; internal tissue) paired with South American gamefowl hardiness.</p>
         </div>
         <div class="value-card">
-          <div class="value-icon">🌱</div>
-          <h4>SUSTAIN</h4>
-          <p>Building a resilient farm that respects animals, land, and local ecosystems for long-term viability.</p>
+          <div class="value-icon">🕊️</div>
+          <h4>PORCELAIN D'UCCLE</h4>
+          <p>Triple-homozygous lavender, mottled, and booted feathering with lush muffs and beard in bantam scale.</p>
         </div>
         <div class="value-card">
-          <div class="value-icon">📖</div>
-          <h4>EDUCATE</h4>
-          <p>Sharing knowledge and open scientific tools to inspire the next generation of heritage breed stewards.</p>
+          <div class="value-icon">🥊</div>
+          <h4>ASEEL (UPCOMING)</h4>
+          <p>Ancient Oriental gamefowl strain — pea combs, broad chest muscularity, heavy bone density, and legendary vigor.</p>
         </div>
       </div>
 
@@ -399,7 +383,7 @@
         <svg viewBox="0 0 24 24" fill="#D4AF37"><circle cx="12" cy="12" r="9"/></svg>
       </div>
       <h2 style="font-family:var(--font-h); color:var(--c-gold); text-align:center;">Join Master Breeder Club</h2>
-      <p style="text-align:center; color:var(--c-muted); font-size:0.88rem;">$10.00 / month • Cancel anytime</p>
+      <p style="text-align:center; color:var(--c-muted); font-size:0.88rem;">$10.00 / month • Priority Stock &amp; Genetics Access</p>
     </div>
 
     <form id="checkout-form" style="margin-top:1.5rem;">
@@ -410,6 +394,16 @@
       <div class="form-group">
         <label class="form-label">Email Address</label>
         <input type="email" class="form-input" required placeholder="breeder@farm.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Specialty Interest</label>
+        <select class="form-input">
+          <option>🌹 Blue Rosecomb Bantams</option>
+          <option>🦅 Pure Surinam Black &amp; Blues</option>
+          <option>🕊️ Porcelain D'Uccle Bantams</option>
+          <option>🥊 Upcoming Aseels</option>
+          <option>🌟 All Preservation Bloodlines</option>
+        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Simulated Card Details</label>
@@ -437,8 +431,8 @@
 <!-- FOOTER                                    -->
 <!-- ══════════════════════════════════════════ -->
 <footer>
-  <p><strong>Big Game Theory</strong> — Heritage Poultry • Preservation • Genetics</p>
-  <p>Virginia Beach, Virginia | press@biggametheoryfarm.com | @biggametheory.farm</p>
+  <p><strong>Big Game Theory</strong> — Blue Rosecombs • Surinam Blacks &amp; Blues • Porcelain D'Uccles • Aseels</p>
+  <p>Virginia Beach, Virginia | press@biggametheoryfarm.com | Hosted 100% Free on GitHub Pages</p>
 </footer>
 
 <script type="module" src="js/app.js"></script>
